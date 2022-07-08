@@ -2,7 +2,14 @@
 module.exports = {
   content: ['./src/**/*.{html,js}'],
   theme: {
-    extend: {},
+    fontFamily: {
+      display: ['\'Red Hat Display\'', 'serif'],
+    },
+    extend: {
+      screens: {
+        '2xl': '1320px',
+      },
+    },
   },
   plugins: [],
 };
