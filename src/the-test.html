@@ -26,7 +26,7 @@
         </div>
         <button disabled class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-start-questions">Let's go</button>
       </div>
-      <div class="js-questions-wrapper hidden">
+      <div class="js-test-wrapper hidden">
         <div class="js-loading">
           <div class="text-center">
             <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,18 +35,23 @@
             </svg>
         </div>
         </div>
-        <div class="js-questions max-w-[650px] min-h-[300px] p-6 font-display">
+        <div class="js-questions-wrapper max-w-[650px] min-h-[300px] p-6 font-display">
           <h5 class="js-question-field text-3xl mb-5"></h5>
-          <ul class="js-answer-list space-y-3">
+          <ul class="js-answers-field space-y-3">
             <!-- <li>
               <input class="absolute top-0 left-0 invisible peer" name="eri" type="radio" value="answer-1" id="answer-1">
               <label class="flex border border-gray-300 rounded-md py-3 px-3.5 cursor-pointer hover:shadow-md transition duration-200 peer-checked:border-blue-600 peer-checked:font-medium" for="answer-1">Answer 1</label>
             </li> -->
           </ul>
           <div class="flex justify-between mt-6">
-            <button disabled data-prev-question="0" class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-prev-question">Previous</button>
-            <button data-next-question="1" class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-next-question">Next</button>
+            <button disabled class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-prev-question">Previous</button>
+            <button disabled class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-next-question">Next</button>
+            <button disabled class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-finish-test hidden">Finish the test</button>
           </div>
+        </div>
+        <div class="js-result-wrapper max-w-[650px] font-display bg-gray-200 p-14 rounded-xl hidden">
+          <h2 class="text-5xl font-medium mb-8">Congrats! <br> You are an <mark class="bg-[url(//s2.svgbox.net/pen-brushes.svg?ic=brush-1&color=5c9aff)] bg-transparent px-5">introvert...</mark></h2>
+          <p class="text-lg js-result-text">You feel that living alone is to live happily, and you prefer hiding in a crowd rather than standing out in one. You are perpetually tormented by the idea of doing things wrong, not understanding or not being alert enough or intelligent enough to do what others expect of you. You lack in self-confidence and you seem to believe that others are better than you. While in a conversation, for example, you would be more likely to go along with the other’s points of view as you don’t fully respect your own opinions. Where there’s a low level task to complete or a service to be allotted, it’s you who volunteers. When people want to get out of a task, they naturally come to you as they know that you never say ‘no’. It’s not surprising that you sometimes have the impression of being permanently exploited, but you don’t really know how to break this vicious circle. On the rare occasions that you’ve tried to do so, this uncharacteristic defiance has caused uproar and you’ve ended up backing down. You are afraid of contact with others as you imagine that they are constantly judging you and that their probing looks will obviously find your faults. So, you try to remain the most transparent and discreet possible. How far will you take this logic of self-denigration? Try and stop projecting onto others the bad image you have about yourself. Have a good look around you and you’ll see that they too have faults, weaknesses and shortcomings, so stop finding excuses for everything. Maybe you were brought up in an atmosphere of ‘You’ll never make the grade’ as a child — a poison that you need progressively to get out of your system. Learn to look after your own interests — everyone else does, so why not you? You too have desires, dreams and opinions — express them. If you think that by saying no or thinking differently from others that you will no longer be loved, it just isn’t so. Others will learn to respect you because you respect yourself.</p>
         </div>
       </div>
     </main>

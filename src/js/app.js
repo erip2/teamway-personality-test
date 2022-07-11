@@ -3,43 +3,81 @@ import { showElement, hideElement } from './toggleElementVisibility';
 
 /* Your JS Code goes here */
 
-// Global variables
-const CURRENT_QUESTION = 0;
+// Global and state variables
+let CURRENT_QUESTION = 0;
 let TOTAL_QUESTIONS;
+const FETCH_URL = 'https://62c842678c90491c2cb27bdd.mockapi.io/personality-test/';
 
 // Elements
 const questionField = document.querySelector('.js-question-field');
-const answersField = document.querySelector('.js-answer-list');
-const prevQuestionButton = document.querySelector('.js-prev-question');
-const nextQuestionButton = document.querySelector('.js-next-question');
-const startTestSubmit = document.querySelector('.js-start-questions');
+const answersField = document.querySelector('.js-answers-field');
+
 const loadingIcon = document.querySelector('.js-loading');
 
+const resultWrapper = document.querySelector('.js-result-wrapper');
+const resultText = document.querySelector('.js-result-text');
+
+const questionsWrapper = document.querySelector('.js-questions-wrapper');
+const testWrapper = document.querySelector('.js-test-wrapper');
+const preTestWrapper = document.querySelector('.js-start-test');
+
+// Buttons
+const startTestSubmit = document.querySelector('.js-start-questions');
+const prevQuestionButton = document.querySelector('.js-prev-question');
+const nextQuestionButton = document.querySelector('.js-next-question');
+const finishTestButton = document.querySelector('.js-finish-test');
+
 // Event Listeners
-nextQuestionButton.addEventListener('click', (e) => {
-  const nextQuestionId = e.target.dataset.nextQuestion;
-  e.target.dataset.nextQuestion = Number(nextQuestionId) + 1;
-  goToQuestion(nextQuestionId);
-});
+function initEventListeners() {
+  nextQuestionButton.addEventListener('click', () => {
+    CURRENT_QUESTION += 1;
+    disableNextButton();
+    goToQuestion(CURRENT_QUESTION);
+  });
 
-prevQuestionButton.addEventListener('click', (e) => {
-  const prevQuestionId = e.target.dataset.prevQuestion;
-  e.target.dataset.prevQuestion = Number(prevQuestionId) - 1;
-  goToQuestion(prevQuestionId);
-});
+  prevQuestionButton.addEventListener('click', () => {
+    CURRENT_QUESTION -= 1;
+    goToQuestion(CURRENT_QUESTION);
+  });
 
-startTestSubmit.addEventListener('click', function() {
-  hideNameInput();
-  showQuestion(0);
-});
+  startTestSubmit.addEventListener('click', () => {
+    hideElement(preTestWrapper);
+    showElement(testWrapper);
+
+    goToQuestion(0);
+  });
+
+  finishTestButton.addEventListener('click', () => {
+    hideElement(questionField);
+    hideElement(questionsWrapper);
+
+    getResult();
+  });
+}
+
+/**
+ * When the radio is selected, we enable the nextQuestionButton
+ */
+function initAnswerChangeEventListener() {
+  answersField.addEventListener('change', function(e) {
+    const { target } = e;
+    if (target.type === 'radio') {
+      enableNextButton();
+
+      if (CURRENT_QUESTION === TOTAL_QUESTIONS - 1) {
+        finishTestButton.disabled = false;
+      }
+    }
+  });
+}
 
 // Init App
 document.addEventListener('DOMContentLoaded', function() {
-  startQuestions();
+  initApp();
 });
 
 // Functions
-function startQuestions() {
+function initApp() {
   const nameInput = document.querySelector('.js-name-input');
 
   nameInput.addEventListener('keyup', function() {
@@ -50,28 +88,36 @@ function startQuestions() {
     }
   });
 
+  initEventListeners();
   getQuestionsLength();
 }
 
-function hideNameInput() {
-  document.querySelector('.js-start-test').style.display = 'none';
-  showElement(document.querySelector('.js-questions-wrapper'));
-}
-
+/**
+ * Get the questions length and save it on the state
+ */
 function getQuestionsLength() {
-  fetch('https://62c842678c90491c2cb27bdd.mockapi.io/personality-test/questions')
+  fetch(`${FETCH_URL}/questions`)
     .then((response) => response.json())
     .then((data) => {
       TOTAL_QUESTIONS = data.count;
     });
 }
 
+/**
+ * Returns the question data for specific id
+ * @param {int} id
+ * @returns object
+ */
 async function getQuestion(id) {
-  const response = await fetch(`https://62c842678c90491c2cb27bdd.mockapi.io/personality-test/questions/${id}`);
+  const response = await fetch(`${FETCH_URL}/questions/${id}`);
   const data = await response.json();
   return data;
 }
 
+/**
+ * Gets the questions and shows it in the view
+ * @param {int} id
+ */
 function showQuestion(id) {
   const question = getQuestion(id);
 
@@ -86,36 +132,65 @@ function showQuestion(id) {
           </li>`;
     });
 
+    initAnswerChangeEventListener();
     hideElement(loadingIcon);
-    showElement(document.querySelector('.js-questions'));
+    showElement(questionsWrapper);
   });
 }
 
 function goToQuestion(id) {
   // Show Loading Icon
-  loadingIcon.classList.remove('hidden');
+  showElement(loadingIcon);
 
   // Hide and remove current question
-  showElement(document.querySelector('.js-questions'));
+  hideElement(questionsWrapper);
   questionField.innerHTML = '';
   answersField.innerHTML = '';
 
   // Show Next Question
-  enableDisableButtons();
   showQuestion(id);
+  toggleButtonsDisableProperty();
 }
 
-function enableDisableButtons() {
-  if (CURRENT_QUESTION === TOTAL_QUESTIONS) {
-    nextQuestionButton.disabled = true;
+/**
+ * Toggle prev/next buttons depending on which question we are currently
+ * @returns void
+ */
+function toggleButtonsDisableProperty() {
+  if (CURRENT_QUESTION === TOTAL_QUESTIONS - 1) {
+    hideElement(nextQuestionButton);
+    showElement(finishTestButton);
     return;
   }
+  hideElement(finishTestButton);
+  showElement(nextQuestionButton);
 
   if (CURRENT_QUESTION === 0) {
     prevQuestionButton.disabled = true;
     return;
   }
 
-  nextQuestionButton.disabled = false;
   prevQuestionButton.disabled = false;
+}
+
+function enableNextButton() {
+  nextQuestionButton.disabled = false;
+}
+
+function disableNextButton() {
+  nextQuestionButton.disabled = true;
+}
+
+// Result functions
+function getResult() {
+  fetch(`${FETCH_URL}/results`)
+    .then((response) => response.json())
+    .then((data) => {
+      showResult(data[0].results.introvert);
+    });
+}
+
+function showResult(data) {
+  resultText.innerHTML = data;
+  showElement(resultWrapper);
 }
