@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Eri Personality Test - The test</title>
+    <meta name="description" content="Are you an introvert or an extrovert? Check it here!">
+    <meta name="keywords" content="personality, test, introvert, extrovert">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Eri Panci">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container px-6 mx-auto mt-7">
+      <a class="inline-block relative top-5" href="/">
+        <img class="w-24" src="./images/ept-logo.png" alt="EPT Logo" >
+      </a>
+    </div>
+    <div class="bg-[url('../images/watercolor-brush.png')] w-[240px] h-[214px] bg-contain bg-no-repeat absolute right-0 top-3"></div>
+    <main class="flex flex-col justify-center items-center h-screen">
+      <div class="flex flex-col items-end js-start-test">
+        <div class="relative z-0 w-[340px] mb-6 group font-display">
+          <input type="email" name="floating_email" class="block py-2.5 px-0 w-full text-3xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer js-name-input" placeholder=" " required />
+          <label for="floating_email" class="peer-focus:font-medium absolute text-3xl text-gray-500 duration-300 transform -translate-y-10 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-10">My name is</label>
+        </div>
+        <button disabled class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-start-questions">Let's go</button>
+      </div>
+      <div class="js-questions-wrapper hidden">
+        <div class="js-loading">
+          <div class="text-center">
+            <svg role="status" class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+            </svg>
+        </div>
+        </div>
+        <div class="js-questions max-w-[650px] min-h-[300px] p-6 font-display">
+          <h5 class="js-question-field text-3xl mb-5"></h5>
+          <ul class="js-answer-list space-y-3">
+            <!-- <li>
+              <input class="absolute top-0 left-0 invisible peer" name="eri" type="radio" value="answer-1" id="answer-1">
+              <label class="flex border border-gray-300 rounded-md py-3 px-3.5 cursor-pointer hover:shadow-md transition duration-200 peer-checked:border-blue-600 peer-checked:font-medium" for="answer-1">Answer 1</label>
+            </li> -->
+          </ul>
+          <div class="flex justify-between mt-6">
+            <button disabled data-prev-question="0" class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-prev-question">Previous</button>
+            <button data-next-question="1" class="w-fit bg-blue-600 text-white text-lg px-6 py-2.5 rounded-md tracking-wider hover:bg-blue-400 transition-colors duration-300 ease-in-out disabled:bg-blue-200 js-next-question">Next</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
