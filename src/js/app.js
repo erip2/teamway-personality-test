@@ -6,6 +6,7 @@ import { showElement, hideElement } from './toggleElementVisibility';
 // Global and state variables
 let CURRENT_QUESTION = 0;
 let TOTAL_QUESTIONS;
+const ANSWERS = [];
 const FETCH_URL = 'https://62c842678c90491c2cb27bdd.mockapi.io/personality-test/';
 
 // Elements
@@ -15,6 +16,7 @@ const answersField = document.querySelector('.js-answers-field');
 const loadingIcon = document.querySelector('.js-loading');
 
 const resultWrapper = document.querySelector('.js-result-wrapper');
+const resultTitle = document.querySelector('.js-result-title');
 const resultText = document.querySelector('.js-result-text');
 
 const questionsWrapper = document.querySelector('.js-questions-wrapper');
@@ -59,10 +61,11 @@ function initEventListeners() {
  * When the radio is selected, we enable the nextQuestionButton
  */
 function initAnswerChangeEventListener() {
-  answersField.addEventListener('change', function(e) {
+  answersField.addEventListener('change', function (e) {
     const { target } = e;
     if (target.type === 'radio') {
       enableNextButton();
+      saveAnswer(target);
 
       if (CURRENT_QUESTION === TOTAL_QUESTIONS - 1) {
         finishTestButton.disabled = false;
@@ -72,15 +75,19 @@ function initAnswerChangeEventListener() {
 }
 
 // Init App
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   initApp();
 });
+
+function saveAnswer(target) {
+  ANSWERS[CURRENT_QUESTION] = Number(target.value);
+}
 
 // Functions
 function initApp() {
   const nameInput = document.querySelector('.js-name-input');
 
-  nameInput.addEventListener('keyup', function() {
+  nameInput.addEventListener('keyup', function () {
     if (this.value !== '') {
       startTestSubmit.disabled = false;
     } else {
@@ -123,14 +130,32 @@ function showQuestion(id) {
 
   question.then((data) => {
     questionField.innerHTML = data.question;
+    let isChecked;
+    let checkAnswer;
 
     data.answers.forEach((answer, i) => {
-      answersField.innerHTML
-      += `<li>
-            <input class="absolute top-0 left-0 invisible peer" name="eri" type="radio" value="answer-${i}" id="answer-${i}">
-            <label class="flex border border-gray-300 rounded-md py-3 px-3.5 cursor-pointer hover:shadow-md transition duration-200 peer-checked:border-blue-600 peer-checked:font-medium" for="answer-${i}">${answer}</label>
+      if (ANSWERS[CURRENT_QUESTION] === i + 1) {
+        checkAnswer = true;
+        isChecked = true;
+      }
+
+      answersField.innerHTML += `<li>
+            <input ${
+  checkAnswer === true ? 'checked' : ''
+} class="absolute top-0 left-0 invisible peer" name="eri" type="radio" value="${
+  i + 1
+}" id="answer-${i + 1}">
+            <label class="flex border border-gray-300 rounded-md py-3 px-3.5 cursor-pointer hover:shadow-md transition duration-200 peer-checked:border-blue-600 peer-checked:font-medium" for="answer-${
+  i + 1
+}">${answer}</label>
           </li>`;
+
+      checkAnswer = false;
     });
+
+    if (isChecked) {
+      enableNextButton();
+    }
 
     initAnswerChangeEventListener();
     hideElement(loadingIcon);
@@ -183,14 +208,28 @@ function disableNextButton() {
 
 // Result functions
 function getResult() {
+  let answersResult = 0;
+  let personality;
+
+  ANSWERS.forEach((answer) => {
+    answersResult = answer + answersResult;
+  });
+
+  if (answersResult < (TOTAL_QUESTIONS * 4) / 2) {
+    personality = 'introvert';
+  } else {
+    personality = 'extrovert';
+  }
+
   fetch(`${FETCH_URL}/results`)
     .then((response) => response.json())
     .then((data) => {
-      showResult(data[0].results.introvert);
+      showResult(personality, data[0].results[personality]);
     });
 }
 
-function showResult(data) {
+function showResult(title, data) {
+  resultTitle.innerHTML = title;
   resultText.innerHTML = data;
   showElement(resultWrapper);
 }
