@@ -201,7 +201,7 @@ var view = {
         answersField.innerHTML += `<li>
               <input ${
   checkAnswer === true ? 'checked' : ''
-} class="absolute top-0 left-0 invisible peer" name="eri" type="radio" value="${
+} class="absolute top-0 left-0 invisible peer" name="quiz" type="radio" value="${
   i + 1
 }" id="answer-${i + 1}">
               <label class="flex border border-gray-300 rounded-md py-3 px-3.5 cursor-pointer hover:shadow-md transition duration-200 peer-checked:border-blue-600 peer-checked:font-medium" for="answer-${
