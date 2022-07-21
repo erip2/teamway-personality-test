@@ -39,15 +39,10 @@ var quiz = {
     quiz.updateQuestionOnLocalStorage();
   },
   initVariables: () => {
-    if (window.localStorage.getItem('test_data') != null) {
-      const localStorageData = window.localStorage.getItem('test_data');
-      const localStorageDataObject = JSON.parse(localStorageData);
-      quiz.current_question = localStorageDataObject.current_question;
-      quiz.answers = localStorageDataObject.answers;
-      quiz.getQuestionsLength();
-    } else {
-      quiz.saveOnLocalStorage();
-    }
+    const localStorageData = window.localStorage.getItem('test_data');
+    const localStorageDataObject = JSON.parse(localStorageData);
+    quiz.current_question = localStorageDataObject.current_question;
+    quiz.answers = localStorageDataObject.answers;
   },
   saveOnLocalStorage: () => {
     const localStorageData = {
@@ -76,12 +71,30 @@ var quiz = {
         quiz.total_questions = data.count;
       });
   },
+  areVariablesInLocalStorage: () => {
+    if (window.localStorage.getItem('test_data') != null) {
+      return true;
+    } return false;
+  },
+  getResult: async (personality) => {
+    const response = await fetch(`${quiz.fetch_url}/results`);
+    const data = await response.json();
+    return data[0].results[personality];
+  },
 };
 
 var handlers = {
   startQuiz: () => {
-    quiz.initVariables();
-    view.initNameView();
+    if (quiz.areVariablesInLocalStorage()) {
+      quiz.initVariables();
+      hideElement(preTestWrapper);
+      showElement(testWrapper);
+      view.goToQuestion(quiz.current_question);
+    } else {
+      quiz.saveOnLocalStorage();
+      view.initNameView();
+    }
+    quiz.getQuestionsLength();
     handlers.initEventListeners();
   },
   initEventListeners: () => {
@@ -108,7 +121,40 @@ var handlers = {
       hideElement(questionField);
       hideElement(questionsWrapper);
 
-      // getResult();
+      handlers.getResult();
+    });
+  },
+  initAnswerChangeEventListener: () => {
+    answersField.addEventListener('change', function (e) {
+      const { target } = e;
+      if (target.type === 'radio') {
+        view.enableNextButton();
+        quiz.saveAnswer(target);
+        quiz.updateCurrentQuestion();
+
+        if (quiz.current_question === quiz.total_questions - 1) {
+          finishTestButton.disabled = false;
+        }
+      }
+    });
+  },
+  getResult: () => {
+    let answersResult = 0;
+    let personality;
+
+    quiz.answers.forEach((answer) => {
+      answersResult = answer + answersResult;
+    });
+
+    if (answersResult < (quiz.total_questions * 4) / 2) {
+      personality = 'introvert';
+    } else {
+      personality = 'extrovert';
+    }
+
+    const result = quiz.getResult(personality);
+    result.then((data) => {
+      view.showResult(personality, data);
     });
   },
 };
@@ -170,7 +216,7 @@ var view = {
         view.enableNextButton();
       }
 
-      // initAnswerChangeEventListener();
+      handlers.initAnswerChangeEventListener();
       hideElement(loadingIcon);
       showElement(questionsWrapper);
     });
@@ -196,6 +242,11 @@ var view = {
     }
 
     prevQuestionButton.disabled = false;
+  },
+  showResult: (title, data) => {
+    resultTitle.innerHTML = title;
+    resultText.innerHTML = data;
+    showElement(resultWrapper);
   },
 };
 
