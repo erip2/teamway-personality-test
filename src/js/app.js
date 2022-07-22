@@ -252,5 +252,10 @@ var view = {
 
 // Init App
 document.addEventListener('DOMContentLoaded', () => {
-  handlers.startQuiz();
+  const main = document.querySelector('main');
+  if (main) {
+    if (main.getAttribute('id') === 'the-test') {
+      handlers.startQuiz();
+    }
+  }
 });
