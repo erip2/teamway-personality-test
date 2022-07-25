@@ -29,6 +29,7 @@
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
     "cypress": "^10.3.1",
+    "cypress-localstorage-commands": "^2.1.0",
     "eslint": "^8.13.0",
     "eslint-config-airbnb": "^19.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -74,10 +75,8 @@
     "bundle": "npm install && npm run watch",
     "dev": "webpack serve --config configuration/webpack.dev.config.js --mode=development",
     "production": "webpack --config configuration/webpack.prod.config.js --mode=production",
-    "lint:sass": "sass-lint -v -q",
-    "lint:js": "eslint --ext .js src/js/",
-    "stats": "webpack --config configuration/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json",
-    "test": "jest"
+    "test": "npm run dev & npm run cy:run",
+    "cy:run": "npx cypress run --headed"
   },
   "target": "web"
 }

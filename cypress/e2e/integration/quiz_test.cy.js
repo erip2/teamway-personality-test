@@ -1,8 +1,21 @@
 /// <reference types="cypress" />
+import 'cypress-localstorage-commands';
 
 describe('example quiz test take', () => {
+  before(() => {
+    cy.clearLocalStorageSnapshot();
+  });
+
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+  });
+
+  afterEach(() => {
+    cy.saveLocalStorage();
+  });
+
   it('opens the homepage', () => {
-    cy.visit('http://localhost:8000/');
+    cy.visit('index.html');
   });
 
   it('opens the test page', () => {
@@ -29,10 +42,36 @@ describe('example quiz test take', () => {
 
     // cy.wait('@getFirstQuesion').its('response.statusCode').should('eq', 200);
 
-    // Lets this because of this issue: https://62c842678c90491c2cb27bdd.mockapi.io/personality-test//questions/0
+    // Let this because of this issue:
   });
 
-  it('selects the second answers and goes to the next question', () => {
-    cy.get('label[for="answer-2"]').click();
+  it('selects a random answer and goes to the next question', () => {
+    for (let i = 0; i < 8; i++) {
+      const randomAnswer = Math.floor(Math.random() * 4) + 1;
+      cy.get(`label[for="answer-${randomAnswer}"]`).click();
+      cy.get('.js-next-question').click();
+    }
+
+    const randomAnswer = Math.floor(Math.random() * 4) + 1;
+    cy.get(`label[for="answer-${randomAnswer}"]`).click();
+  });
+
+  it('should the reload the page', () => {
+    cy.reload();
+  });
+
+  it('should continue where it left of and selects a random answer and goes to the next question', () => {
+    for (let i = 0; i < 5; i++) {
+      const randomAnswer = Math.floor(Math.random() * 4) + 1;
+      cy.get(`label[for="answer-${randomAnswer}"]`).click();
+      cy.get('.js-next-question').click();
+    }
+
+    const randomAnswer = Math.floor(Math.random() * 4) + 1;
+    cy.get(`label[for="answer-${randomAnswer}"]`).click();
+  });
+
+  it('should show the quiz answer', () => {
+    cy.get('.js-finish-test').click();
   });
 });
